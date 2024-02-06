@@ -24,7 +24,7 @@ def add_dgb_arguments(parser, required):
         "--language",
         help="Language of data.",
         type=str,
-        default="ru",
+        default="multilingual",
         required=False,
     )
     sub_parser.add_argument(

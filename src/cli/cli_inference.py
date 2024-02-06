@@ -10,8 +10,8 @@ import json
 
 from .parsers import add_dgb_arguments, add_cand_arguments, add_persona_arguments, add_share_arguments
 
-from dialog_graph_processer.DGAC_MP.intent_prediction import IntentPredictor
-from dialog_graph_processer.Ranking.ranking import Ranking
+from DGAC_MP.intent_prediction import IntentPredictor
+from Ranking.ranking import Ranking
 
 
 def get_parser():
@@ -47,11 +47,11 @@ def run_dg_build(
     save_dir: pathlib.Path,
     n_cluster1: int = 200,
     n_cluster2: int = 30,
-    language: str = "ru",
+    language: str = "multilingual",
     n_speakers: int = 2,
 ):
     save_dir.mkdir(exist_ok=True)
-    embeddings_file = save_dir / "ru_embeddings.npy"
+    embeddings_file = save_dir / "embeddings.npy"
     dialog_graph_file = save_dir / "dialog_graph.pickle"
 
     intent_predictor = IntentPredictor(

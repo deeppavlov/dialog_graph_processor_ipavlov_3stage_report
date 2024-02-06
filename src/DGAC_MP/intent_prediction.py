@@ -6,13 +6,13 @@ import pandas as pd
 import torch
 from tqdm import tqdm
 
-from dialog_graph_processer.DGAC_MP.dgac_two_speakers import Clusters as ClustersTwoSpeakers
-from dialog_graph_processer.DGAC_MP.dgac_one_speakers import Clusters as ClustersOneSpeaker
-from dialog_graph_processer.DGAC_MP.data_function_one_partite import get_data as get_data_one_speaker
-from dialog_graph_processer.DGAC_MP.data_function_two_partite import get_data as get_data_two_speakers
-from dialog_graph_processer.DGAC_MP.dgl_graph_conctruction import get_dgl_graphs
-from dialog_graph_processer.DGAC_MP.early_stopping_tools import LRScheduler, EarlyStopping
-from dialog_graph_processer.DGAC_MP.GAT import GAT_model
+from DGAC_MP.dgac_two_speakers import Clusters as ClustersTwoSpeakers
+from DGAC_MP.dgac_one_speakers import Clusters as ClustersOneSpeaker
+from DGAC_MP.data_function_one_partite import get_data as get_data_one_speaker
+from DGAC_MP.data_function_two_partite import get_data as get_data_two_speakers
+from DGAC_MP.dgl_graph_conctruction import get_dgl_graphs
+from DGAC_MP.early_stopping_tools import LRScheduler, EarlyStopping
+from DGAC_MP.GAT import GAT_model
 
 
 class IntentPredictor:

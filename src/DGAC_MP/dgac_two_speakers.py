@@ -91,7 +91,7 @@ class Clusters:
             calculating embeddings
         '''
         
-        if self.language == "ru":
+        if self.language == "multilingual":
             self.encoder_model = SentenceTransformer('sentence-transformers/LaBSE')
         elif self.language == "en":
             self.encoder_model = SentenceTransformer('sentence-transformers/all-distilroberta-v1')
