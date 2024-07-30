@@ -39,12 +39,13 @@ class Clusters:
     ''' 
         the class that forms clusters
     '''
-    def __init__(self, data_path, embedding_file, language, first_num_clusters, second_num_clusters):
+    def __init__(self, data_path, embedding_file, language, first_num_clusters, second_num_clusters, is_split = True):
         self.data_path = data_path
         self.embedding_file = embedding_file
         self.first_num_clusters = first_num_clusters
         self.second_num_clusters = second_num_clusters
         self.language = language
+        self.is_split = is_split
         
         if self.first_num_clusters == -1:
             self.first_num_clusters = self.second_num_clusters
@@ -57,21 +58,30 @@ class Clusters:
         with open(self.data_path) as file:
             dataset = json.load(file)
         
-        random.shuffle(dataset)
-        
-        # train-validation splitting 
-        validation_split = int(len(dataset) * 0.8)
-        self.valid_dataset = dataset[validation_split : ]
-        self.train_dataset = dataset[ : validation_split]
-        
-        # get utterances from data
+        if not self.is_split:
+            random.shuffle(dataset)
+            # train-validation splitting 
+            train_split = int(len(dataset) * 0.8)
+            validation_split = int(len(dataset) * 0.9)
+
+            self.train_dataset = dataset[ : train_split]
+            self.test_dataset = dataset[train_split : validation_split]  
+            self.valid_dataset = dataset[validation_split : ]
+        else:
+            self.train_dataset = dataset['train']
+            self.test_dataset = dataset['test']
+            self.valid_dataset = dataset['validation']
+
+        # get uttrances from data
         self.train_df = get_pd_utterances_speaker(self.train_dataset)
+        self.test_df = get_pd_utterances_speaker(self.test_dataset)
         self.valid_df = get_pd_utterances_speaker(self.valid_dataset)
         
-        self.df = pd.concat([self.train_df, self.valid_df], ignore_index=True)
+        self.df = pd.concat([self.train_df, self.test_df, self.valid_df], ignore_index=True)
         
         self.train_index = self.train_df.index
-        self.valid_index = self.valid_df.index + len(self.train_df)
+        self.test_index = self.test_df.index + len(self.train_df)
+        self.valid_index = self.valid_df.index + len(self.train_df) + len(self.test_df)
     
     def get_first_clusters(self, embs, n_clusters):
         '''
@@ -88,6 +98,7 @@ class Clusters:
         '''
             calculating embeddings
         '''
+        
         if self.language == "multilingual":
             self.encoder_model = SentenceTransformer('sentence-transformers/LaBSE')
         elif self.language == "en":
@@ -96,6 +107,7 @@ class Clusters:
             raise ValueError('Wrong language!')
         
         device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+        
         self.encoder_model = self.encoder_model.to(device)
         if pathlib.Path(self.embedding_file).exists():
             embeddings = np.load(self.embedding_file)
@@ -104,6 +116,7 @@ class Clusters:
             np.save(self.embedding_file, embeddings)
         
         self.train_embs = embeddings[self.train_index]
+        self.test_embs = embeddings[self.test_index]        
         self.valid_embs = embeddings[self.valid_index]
 
         self.embs_dim = embeddings.shape[1]
@@ -144,13 +157,29 @@ class Clusters:
         for i in range(self.first_num_clusters):
             self.cluster_embs_first_stage.append(list(model_first_stage.wv[str(i)]) + list(self.mean_emb[i]))
     
-    def get_validation_clusters(self, num_clusters):
+    def get_test_and_valid(self, num_clusters):
         '''
             cluster searching for validation
         '''
+        self.cluster_test_df = self.test_df.copy()
         self.cluster_valid_df = self.valid_df.copy()
+        
+        # searching the nearest cluster for each test utterance
+        test_clusters = []
+        
+        for i in range(len(self.test_df)):
+            distances = []
+            emb = np.array(self.test_embs[i])
 
-        # searching the nearest cluster for each validation user utterance
+            for j in range(num_clusters):
+                distances.append((np.sqrt(np.sum(np.square(emb - self.mean_emb[j]))), j))
+
+            distances = sorted(distances)
+            test_clusters.append(distances[0][1])
+
+        self.cluster_test_df['cluster'] = test_clusters
+
+        # searching the nearest cluster for each validation utterance
         valid_clusters = []
 
         for i in range(len(self.cluster_valid_df)):
@@ -180,7 +209,8 @@ class Clusters:
         '''
             one stage clustering
         '''
-        self.get_validation_clusters(self.first_num_clusters)
+
+        self.get_test_and_valid(self.first_num_clusters)
         self.cluster_embs = self.cluster_embs_first_stage
         self.cluster_train_df = self.train_df_first_stage
           
@@ -238,7 +268,7 @@ class Clusters:
             two_stage_clustering
         '''
 
-        self.get_validation_clusters(self.second_num_clusters)
+        self.get_test_and_valid(self.second_num_clusters)
         self.cluster_embs = self.cluster_embs_sec_stage
         self.cluster_train_df = self.train_df_sec_stage
         

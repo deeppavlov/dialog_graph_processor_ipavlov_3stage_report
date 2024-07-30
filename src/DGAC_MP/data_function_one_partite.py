@@ -37,7 +37,7 @@ def get_data(dataset, top_k, num_clusters, clusters_info, embs):
         utterance_clusters = [zero_cluster for i in range(top_k)]
         utterance_embs = [null_cluster_emb for i in range(top_k)]
    
-        for j in range(len(obj)):
+        for j in range(len(obj["utterance"])):
             utterance_clusters.append(clusters_info["cluster"][index])
             utterance_embs.append(embs[index])
             index += 1
