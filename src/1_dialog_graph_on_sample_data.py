@@ -18,7 +18,7 @@ import pathlib
 
 from DGAC_MP.intent_prediction import IntentPredictor
 from Ranking.ranking import Ranking
-pathlib.Path("test_dir").mkdir()
+pathlib.Path("test_dir").mkdir(parents=True, exist_ok=True)
 
 DATA_PATH = "data/dataset/small_data.json"
 EMBEDDINGS_FILE = "test_dir/embeddings.npy"

@@ -18,10 +18,10 @@ import pathlib
 
 from DGAC_MP.intent_prediction import IntentPredictor
 from Ranking.ranking import Ranking
-pathlib.Path("multiwoz_dir").mkdir()
+pathlib.Path("test_dir/multiwoz_dir").mkdir(parents=True, exist_ok=True)
 
 DATA_PATH = "data/multiwoz.json"
-EMBEDDINGS_FILE = "multiwoz_dir/embeddings.npy"
+EMBEDDINGS_FILE = "test_dir/multiwoz_dir/embeddings.npy"
 language = "en"
 num_speakers = 2
 num_clusters_per_stage = [200, 30]
@@ -30,7 +30,7 @@ build_start = time.time()
 
 intent_predictor = IntentPredictor(DATA_PATH, EMBEDDINGS_FILE, language, num_speakers, num_clusters_per_stage, is_split = True)
 intent_predictor.dialog_graph_auto_construction()
-intent_predictor.dump_dialog_graph("./multiwoz_dir/dialog_graph")
+intent_predictor.dump_dialog_graph("./test_dir/multiwoz_dir/dialog_graph")
 
 build_end = time.time()
 
@@ -49,13 +49,13 @@ base_model_metrics_end = time.time()
 graph_model_start = time.time()
 
 intent_predictor.dgl_graphs_preprocessing()
-intent_predictor.init_message_passing_model("./multiwoz_dir")
+intent_predictor.init_message_passing_model("./test_dir/multiwoz_dir")
 
 graph_model_end = time.time()
 
 graph_model_metrics_start = time.time()
 
-intent_predictor.get_message_passing_metrics("./multiwoz_dir")
+intent_predictor.get_message_passing_metrics("./test_dir/multiwoz_dir")
 
 graph_model_metrics_end = time.time()
 
