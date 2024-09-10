@@ -228,10 +228,17 @@ class IntentPredictor:
 
         file.write("Accuracy metric\n")
 
-        file.write(f"Acc@1: {self.get_accuracy_one_stage_k(1, self.clusters.cluster_test_df, probs, self.clusters.test_dataset)}\n")
-        file.write(f"Acc@3: {self.get_accuracy_one_stage_k(3, self.clusters.cluster_test_df, probs, self.clusters.test_dataset)}\n")
-        file.write(f"Acc@5: {self.get_accuracy_one_stage_k(5, self.clusters.cluster_test_df, probs, self.clusters.test_dataset)}\n")
-        file.write(f"Acc@10: {self.get_accuracy_one_stage_k(10, self.clusters.cluster_test_df, probs, self.clusters.test_dataset)}\n")
+        acc_1 = self.get_accuracy_one_stage_k(1, self.clusters.cluster_test_df, probs, self.clusters.test_dataset)
+        acc_3 = self.get_accuracy_one_stage_k(3, self.clusters.cluster_test_df, probs, self.clusters.test_dataset)
+        acc_5 = self.get_accuracy_one_stage_k(5, self.clusters.cluster_test_df, probs, self.clusters.test_dataset)
+        acc_10 = self.get_accuracy_one_stage_k(10, self.clusters.cluster_test_df, probs, self.clusters.test_dataset)
+        MAR = (acc_1 + acc_3 + acc_5 + acc_10) / 4
+        
+        file.write(f"Acc@1: {acc_1}\n")
+        file.write(f"Acc@3: {acc_3}\n")
+        file.write(f"Acc@5: {acc_5}\n")
+        file.write(f"Acc@10: {acc_10}\n")
+        file.write(f"MAR: {MAR}\n")
 
     def two_stage_MP_metrics(self, MODEL_PATHS):
         device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -282,11 +289,18 @@ class IntentPredictor:
         file.write(f"Acc@10: {self.get_accuracy_k(10, self.clusters.test_system_df, system_probs, self.clusters.test_dataset, 1)}\n")
 
         file.write("ALL metric\n")
-        file.write(f"Acc@1: {self.get_all_accuracy_k(1, self.clusters.test_user_df, self.clusters.test_system_df, user_probs, system_probs, self.clusters.test_dataset)}\n")
-        file.write(f"Acc@3: {self.get_all_accuracy_k(3, self.clusters.test_user_df, self.clusters.test_system_df, user_probs, system_probs, self.clusters.test_dataset)}\n")
-        file.write(f"Acc@5: {self.get_all_accuracy_k(5, self.clusters.test_user_df, self.clusters.test_system_df, user_probs, system_probs, self.clusters.test_dataset)}\n")
-        file.write(f"Acc@10: {self.get_all_accuracy_k(10, self.clusters.test_user_df, self.clusters.test_system_df, user_probs, system_probs, self.clusters.test_dataset)}\n")
 
+        acc_1 = self.get_all_accuracy_k(1, self.clusters.test_user_df, self.clusters.test_system_df, user_probs, system_probs, self.clusters.test_dataset)
+        acc_3 = self.get_all_accuracy_k(3, self.clusters.test_user_df, self.clusters.test_system_df, user_probs, system_probs, self.clusters.test_dataset)
+        acc_5 = self.get_all_accuracy_k(5, self.clusters.test_user_df, self.clusters.test_system_df, user_probs, system_probs, self.clusters.test_dataset)
+        acc_10 = self.get_all_accuracy_k(10, self.clusters.test_user_df, self.clusters.test_system_df, user_probs, system_probs, self.clusters.test_dataset)
+        MAR = (acc_1 + acc_3 + acc_5 + acc_10) / 4
+        
+        file.write(f"Acc@1: {acc_1}\n")
+        file.write(f"Acc@3: {acc_3}\n")
+        file.write(f"Acc@5: {acc_5}\n")
+        file.write(f"Acc@10: {acc_10}\n")
+        file.write(f"MAR: {MAR}\n")
 
     def one_stage_markov_chain_baseline(self):
         self.probs = np.zeros((self.second_stage_num_clusters + 1, self.second_stage_num_clusters))
@@ -364,10 +378,17 @@ class IntentPredictor:
 
         file.write("Accuracy metric\n")
 
-        file.write(f"Acc@1: {self.get_accuracy_one_stage_k(1, self.clusters.cluster_test_df, test, self.clusters.test_dataset)}\n")
-        file.write(f"Acc@3: {self.get_accuracy_one_stage_k(3, self.clusters.cluster_test_df, test, self.clusters.test_dataset)}\n")
-        file.write(f"Acc@5: {self.get_accuracy_one_stage_k(5, self.clusters.cluster_test_df, test, self.clusters.test_dataset)}\n")
-        file.write(f"Acc@10: {self.get_accuracy_one_stage_k(10, self.clusters.cluster_test_df, test, self.clusters.test_dataset)}\n")
+        acc_1 = self.get_accuracy_one_stage_k(1, self.clusters.cluster_test_df, test, self.clusters.test_dataset)
+        acc_3 = self.get_accuracy_one_stage_k(3, self.clusters.cluster_test_df, test, self.clusters.test_dataset)
+        acc_5 = self.get_accuracy_one_stage_k(5, self.clusters.cluster_test_df, test, self.clusters.test_dataset)
+        acc_10 = self.get_accuracy_one_stage_k(10, self.clusters.cluster_test_df, test, self.clusters.test_dataset)
+        MAR = (acc_1 + acc_3 + acc_5 + acc_10) / 4
+        
+        file.write(f"Acc@1: {acc_1}\n")
+        file.write(f"Acc@3: {acc_3}\n")
+        file.write(f"Acc@5: {acc_5}\n")
+        file.write(f"Acc@10: {acc_10}\n")
+        file.write(f"MAR: {MAR}\n")
         
     def two_stage_markov_chain_metrics(self):
         file = open(f"MarkovChain_two_stage.txt", "w")
@@ -408,11 +429,19 @@ class IntentPredictor:
         file.write(f"Acc@10: {self.get_accuracy_k(10, self.clusters.test_system_df, sys_test, self.clusters.test_dataset, 1)}\n")
 
         file.write("ALL metric\n")
-        file.write(f"Acc@1: {self.get_all_accuracy_k(1, self.clusters.test_user_df, self.clusters.test_system_df, user_test, sys_test, self.clusters.test_dataset)}\n")
-        file.write(f"Acc@3: {self.get_all_accuracy_k(3, self.clusters.test_user_df, self.clusters.test_system_df, user_test, sys_test, self.clusters.test_dataset)}\n")
-        file.write(f"Acc@5: {self.get_all_accuracy_k(5, self.clusters.test_user_df, self.clusters.test_system_df, user_test, sys_test, self.clusters.test_dataset)}\n")
-        file.write(f"Acc@10: {self.get_all_accuracy_k(10, self.clusters.test_user_df, self.clusters.test_system_df, user_test, sys_test, self.clusters.test_dataset)}\n")
 
+        acc_1 = self.get_all_accuracy_k(1, self.clusters.test_user_df, self.clusters.test_system_df, user_test, sys_test, self.clusters.test_dataset)
+        acc_3 = self.get_all_accuracy_k(3, self.clusters.test_user_df, self.clusters.test_system_df, user_test, sys_test, self.clusters.test_dataset)
+        acc_5 = self.get_all_accuracy_k(5, self.clusters.test_user_df, self.clusters.test_system_df, user_test, sys_test, self.clusters.test_dataset)
+        acc_10 = self.get_all_accuracy_k(10, self.clusters.test_user_df, self.clusters.test_system_df, user_test, sys_test, self.clusters.test_dataset)
+        MAR = (acc_1 + acc_3 + acc_5 + acc_10) / 4
+        
+        file.write(f"Acc@1: {acc_1}\n")
+        file.write(f"Acc@3: {acc_3}\n")
+        file.write(f"Acc@5: {acc_5}\n")
+        file.write(f"Acc@10: {acc_10}\n")
+        file.write(f"MAR: {MAR}\n")
+        
     def run_markov_chain_baseline(self):
         if self.num_speakers == 1:
             self.one_stage_markov_chain_baseline()

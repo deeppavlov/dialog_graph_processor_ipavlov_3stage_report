@@ -1,5 +1,12 @@
 # %% [markdown]
 # # Пример использования: Построение векторного представления для персоны в диалоге
+import os, torch
+from tqdm import tqdm
+
+
+os.environ["CUDA_DEVICE_ORDER"]="PCI_BUS_ID"
+os.environ["CUDA_VISIBLE_DEVICES"]="3,4"
+print(torch.cuda.device_count())
 
 # %%
 import time

@@ -24,7 +24,7 @@ DATA_PATH = "data/multiwoz.json"
 EMBEDDINGS_FILE = "multiwoz_dir/embeddings.npy"
 language = "en"
 num_speakers = 2
-num_clusters_per_stage = [200, 30]
+num_clusters_per_stage = [200, 30] # [400, 60], [800, 120]
 
 build_start = time.time()
 
