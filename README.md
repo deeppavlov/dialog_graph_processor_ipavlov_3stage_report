@@ -22,18 +22,8 @@ docker build -t dialog_graph_processor:1.0 .
 
 ```bash
 docker run -ti --rm dialog_graph_processor:1.0 bash
-# Построение диалогового графа и графовой модели предсказание следующей вершины.
-python3 1_dialog_graph_on_sample_data.py
-# Фильтрация кандидатов для следующего ответа для продолжения диалога.
-python3 2_ranking.py
-# Построение векторного представления для персоны в диалоге.
-python3 3_persona_embedding.py
-# Построение диалогового графа, базовой и графовой моделей и подсчет метрик на датасете Multiwoz.
-python3 4_dialog_graph_on_multiwoz_MP_and_baseline.py
-# Построение диалогового графа, базовой и графовой моделей и подсчет метрик на датасете Japanese Multiwoz.
-python3 5_dialog_graph_on_japanese_multiwoz_MP_and_baseline.py
 # Построение диалогового графа и графовой модели предсказание следующей вершины, ввод пользовательских высказываний через REST API по HTTP-протоколу
-python3 6_dialog_graph_on_sample_data_rest_api.py
+python3 1_dialog_graph_on_sample_data_rest_api.py
 # Пример curl запроса для 6 теста
 curl -X POST http://172.17.0.4:5000/predict -H "Content-Type: application/json" -d '{
     "dialog": {
@@ -51,6 +41,14 @@ curl -X POST http://172.17.0.4:5000/predict -H "Content-Type: application/json" 
     },
     "next_utterance": ["Технический университет Дармштадт в топ-25 университетов Европы с наибольшим научным влиянием по рейтингу QS World University Rankings 2020."]
 }'
+# Фильтрация кандидатов для следующего ответа для продолжения диалога.
+python3 2_ranking.py
+# Построение векторного представления для персоны в диалоге.
+python3 3_persona_embedding.py
+# Построение диалогового графа, базовой и графовой моделей и подсчет метрик на датасете Multiwoz.
+python3 4_dialog_graph_on_multiwoz_MP_and_baseline.py
+# Построение диалогового графа, базовой и графовой моделей и подсчет метрик на датасете Japanese Multiwoz.
+python3 5_dialog_graph_on_japanese_multiwoz_MP_and_baseline.py
 
 ```
 
