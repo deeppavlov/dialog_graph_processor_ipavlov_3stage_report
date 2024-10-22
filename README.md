@@ -25,7 +25,7 @@ docker run -ti --rm dialog_graph_processor:1.0 bash
 # Построение диалогового графа и графовой модели предсказание следующей вершины, ввод пользовательских высказываний через REST API по HTTP-протоколу
 python3 1_dialog_graph_on_sample_data_rest_api.py
 # Пример curl запроса для 6 теста
-curl -X POST http://172.17.0.4:5000/predict -H "Content-Type: application/json" -d '{
+curl -X POST http://172.17.0.2:5000/predict -H "Content-Type: application/json" -d '{
     "dialog": {
         "utterance": ["Ух ты, это потрясающе!",
               "Я подумал, что тебе понравится, так как ты интересуешься военной историей.",
